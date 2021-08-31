@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+            <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        {% endblock %}
+
+        {% block javascripts %}
+            <script src="/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+        {% endblock %}
+    </head>
+    <body>
+
+        <div class="container">
+            <h1>Geocaching API with Symfony</h1>
+
+            {% block body %}{% endblock %}
+        </div>
+    </body>
+</html>
