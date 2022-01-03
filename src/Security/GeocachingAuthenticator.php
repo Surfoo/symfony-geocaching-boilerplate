@@ -15,7 +15,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
 class GeocachingAuthenticator extends OAuth2Authenticator
@@ -25,8 +25,7 @@ class GeocachingAuthenticator extends OAuth2Authenticator
         private RouterInterface $router,
         private RequestStack $requestStack,
         private UserDao $userDao,
-        )
-    {
+    ) {
     }
 
     public function supports(Request $request): ?bool
@@ -35,7 +34,7 @@ class GeocachingAuthenticator extends OAuth2Authenticator
         return $request->attributes->get('_route') === 'app_callback';
     }
 
-    public function authenticate(Request $request): PassportInterface
+    public function authenticate(Request $request): Passport
     {
         $session = $this->requestStack->getSession();
 
