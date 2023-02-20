@@ -7,8 +7,7 @@
     "require": {
         "php": ">=8.1",
         "ext-ctype": "*",
-        "composer/package-versions-deprecated": "1.11.99.2",
-        "doctrine/annotations": "^1.0",
+        "composer/package-versions-deprecated": "1.11.99.5",
         "knpuniversity/oauth2-client-bundle": "^2.8",
         "phpdocumentor/reflection-docblock": "^5.2",
         "sensio/framework-extra-bundle": "^6.1",
@@ -17,7 +16,7 @@
         "symfony/console": "^6.2",
         "symfony/dotenv": "^6.2",
         "symfony/expression-language": "^6.2",
-        "symfony/flex": "^1.3.1",
+        "symfony/flex": "^2.2",
         "symfony/framework-bundle": "^6.2",
         "symfony/http-client": "^6.2",
         "symfony/intl": "^6.2",
