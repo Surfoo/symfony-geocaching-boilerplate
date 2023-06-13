@@ -2,21 +2,8 @@
     "composer/package-versions-deprecated": {
         "version": "1.11.99.2"
     },
-    "doctrine/annotations": {
-        "version": "1.13",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.10",
-            "ref": "64d8583af5ea57b7afa4aba4b159907f3a148b05"
-        },
-        "files": []
-    },
     "doctrine/inflector": {
         "version": "2.0.4"
-    },
-    "doctrine/lexer": {
-        "version": "1.2.2"
     },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
@@ -92,18 +79,6 @@
     },
     "ralouphie/getallheaders": {
         "version": "3.0.3"
-    },
-    "sensio/framework-extra-bundle": {
-        "version": "5.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "5.2",
-            "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
-        },
-        "files": [
-            "config/packages/sensio_framework_extra.yaml"
-        ]
     },
     "surfoo/geocaching-php-sdk": {
         "version": "3.16.0"

@@ -10,7 +10,6 @@
         "composer/package-versions-deprecated": "1.11.99.5",
         "knpuniversity/oauth2-client-bundle": "^2.8",
         "phpdocumentor/reflection-docblock": "^5.2",
-        "sensio/framework-extra-bundle": "^6.1",
         "surfoo/geocaching-php-sdk": "^3.16",
         "symfony/asset": "^6.2",
         "symfony/console": "^6.2",
