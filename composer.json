@@ -10,7 +10,7 @@
         "composer/package-versions-deprecated": "1.11.99.5",
         "knpuniversity/oauth2-client-bundle": "^2.8",
         "phpdocumentor/reflection-docblock": "^5.2",
-        "surfoo/geocaching-php-sdk": "^3.16",
+        "surfoo/geocaching-php-sdk": "~4.0.0-rc",
         "symfony/asset": "^6.2",
         "symfony/console": "^6.2",
         "symfony/dotenv": "^6.2",
@@ -55,7 +55,8 @@
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
             "symfony/flex": true,
-            "symfony/runtime": true
+            "symfony/runtime": true,
+            "php-http/discovery": true
         }
     },
     "autoload": {

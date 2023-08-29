@@ -14,13 +14,14 @@ class OAuthController extends AbstractController
     #[Route('/login', name: 'app_login')]
     public function login(ClientRegistry $clientRegistry, RequestStack $requestStack): Response
     {
-        $session = $requestStack->getSession();
-        $session->set('codeVerifier', GeocachingProvider::createCodeVerifier());
+        $session  = $requestStack->getSession();
 
-        $code = ['code_challenge'        => GeocachingProvider::createCodeChallenge($session->get('codeVerifier')),
-                 'code_challenge_method' => 'S256',
-                ];
-        return $clientRegistry->getClient('geocaching_main')->redirect([], $code);
+        $response = $clientRegistry->getClient('geocaching_main')->redirect([], []);
+        $pkceCode = $clientRegistry->getClient('geocaching_main')->getOAuth2Provider()->getPkceCode();
+
+        $session->set('oauth2_pkce_code', $pkceCode);
+
+        return $response;
     }
 
     #[Route('/logout', name: 'app_logout')]

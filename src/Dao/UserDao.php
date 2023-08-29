@@ -3,7 +3,7 @@
 namespace App\Dao;
 
 use App\Security\User;
-use Geocaching\Lib\Utils\Utils;
+use Geocaching\Utils;
 
 class UserDao extends Dao
 {

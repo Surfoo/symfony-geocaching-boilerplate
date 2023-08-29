@@ -4,8 +4,9 @@ namespace App\Security;
 
 use App\Dao\UserDao;
 use App\Security\User;
-use Geocaching\Lib\Utils\Utils;
+use Geocaching\Utils;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use KnpU\OAuth2ClientBundle\Client\Provider\GeocachingClient;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,11 +39,13 @@ class GeocachingAuthenticator extends OAuth2Authenticator
     {
         $session = $this->requestStack->getSession();
 
+        $this->getGeocachingClient()->getOAuth2Provider()->setPkceCode($session->get('oauth2_pkce_code'));
+
         $client = $this->clientRegistry->getClient('geocaching_main');
-        $accessToken = $this->fetchAccessToken($client, [
-            'code'          => $request->get('code'),
-            'code_verifier' => $session->get('codeVerifier'),
+        $accessToken = $this->fetchAccessToken($this->getGeocachingClient(), [
+            'code' => $request->get('code')
         ]);
+
         $geocachingResourceOwner = $client->fetchUserFromToken($accessToken);
 
         $user = new User();
@@ -74,6 +77,11 @@ class GeocachingAuthenticator extends OAuth2Authenticator
         );
 
         return new RedirectResponse($this->router->generate('app_homepage'));
+    }
+
+    private function getGeocachingClient(): GeocachingClient
+    {
+        return $this->clientRegistry->getClient('geocaching_main');
     }
 
 //    public function start(Request $request, AuthenticationException $authException = null): Response
