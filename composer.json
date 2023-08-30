@@ -1,7 +1,8 @@
 {
     "name": "surfoo/symfony-geocaching-demo",
     "type": "project",
-    "license": "UNLICENSED",
+    "description": "Boilerplate for geocaching projects with Symfony",
+    "license": "MIT",
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
