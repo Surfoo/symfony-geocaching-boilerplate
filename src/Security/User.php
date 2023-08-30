@@ -14,9 +14,9 @@ class User implements UserInterface
     private ?string $avatarUrl;
     private string $membershipLevelId;
     private \DateTimeInterface $joinedDateUtc;
-    private AccessToken $credentials;
+    // private AccessToken $credentials;
 
-    private $roles = [];
+    private array $roles = [];
 
     public function getUserId(): ?int
     {
@@ -114,7 +114,7 @@ class User implements UserInterface
 
     public function isPremium(): bool
     {
-        return $this->getMembershipLevelId() == MembershipType::getId('Premium');
+        return $this->getMembershipLevelId() == MembershipType::PREMIUM->id();
     }
 
     /**

@@ -1,5 +1,12 @@
 parameters:
-    level: 5
+    level: max
     paths:
-        - src/
-        - tests/
+        - bin
+        - config
+        - public
+        - src
+        - tests
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+    ignoreErrors:
+        #- '#my_ignored_error_regexp_pattern#'

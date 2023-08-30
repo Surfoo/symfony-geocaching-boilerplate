@@ -38,7 +38,7 @@ class UserProvider implements UserProviderInterface
      *
      * @throws UserNotFoundException if the user is not found
      */
-    public function loadUserByUsername($username): UserInterface
+    public function loadUserByUsername(string $username): UserInterface
     {
         return $this->loadUserByIdentifier($username);
     }
@@ -91,7 +91,7 @@ class UserProvider implements UserProviderInterface
     /**
      * Tells Symfony to use this provider for this User class.
      */
-    public function supportsClass($class): bool
+    public function supportsClass(string $class): bool
     {
         return User::class === $class || is_subclass_of($class, User::class);
     }

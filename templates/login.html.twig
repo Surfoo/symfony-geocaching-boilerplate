@@ -1,7 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Title{% endblock %}
-
 {% block body %}
-<p><a href="{{ path('app_login') }}" class="btn btn-primary">Login</a></p>
+<div class="container-lg alert alert-secondary small" role="alert">
+    <p>
+    <strong>Politique de confidentialité :</strong><br>
+            Le site collecte votre pseudo, avatar et ID utilisateur au moment où vous permettez votre compte d'utiliser l'API Géocaching via 
+            la page d'autorisation.
+            Ces informations sont stockées en base de données et un cookie est utilisé pour vous identifier lors d'une prochaine visite.
+            Ces informations sont utilisées uniquement pour les besoins du site et éviter les participations anonymes. 
+            Aucunes de ces informations ne sont communiquées à des tiers.
+    </p>
+    <p><strong>Attribution :</strong><br>
+            <a href="https://www.geocaching.com" style="float: right;">
+            <img src="{{ asset('assets/live.png') }}" alt="Geocaching API" width="57" height="73"></a>
+            Powered by the Geocaching API. Made possible through the support of Geocaching Premium Memberships, 
+            the API program gives third-party developers the opportunity to work with Geocaching HQ on a full suite of integrated products 
+            and services for the community.
+            API developer applications are designed to work with the core services of geocaching.com and provide additional features to 
+            the geocaching community.<br><br>
+            Geocaching Cache Type Icons © Groundspeak, Inc. DBA Geocaching HQ. All rights reserved. Used with Permission.
+    </p>
+</div>
+
+<p class="text-center"><a href="{{ path('app_login') }}" class="btn btn-lg btn-success">Connexion</a></p>
+
 {% endblock %}

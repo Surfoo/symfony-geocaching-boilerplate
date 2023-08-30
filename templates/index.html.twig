@@ -2,8 +2,12 @@
 
 {% block title %}Title{% endblock %}
 
+
+
 {% block body %}
 
-<p>Hello {{ app.user.username }} !</p>
+<div {{ stimulus_controller('hello') }}>
+    Toto
+</div>
 
 {% endblock %}

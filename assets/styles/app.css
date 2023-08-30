@@ -1,0 +1,47 @@
+body {
+  background: whitesmoke;
+}
+
+nav {
+  color: #fff;
+}
+
+header a {
+  color: #fff;
+}
+
+main > .container {
+  padding: 60px 15px 0;
+}
+
+.connected {
+  font-size: 1em;
+}
+
+.connected img {
+  border-radius: 4px;
+}
+
+@media (max-width: 767.98px) {
+  .navbar-brand {
+    font-size: 0.8em;
+  }
+
+  .short-text {
+    display: inline-block;
+  }
+
+  .full-text {
+    display: none;
+  }
+
+  main > .container {
+    padding: 80px 15px 0;
+  }
+
+  .connected {
+    font-size: 0.8em;
+  }
+}
+
+/*# sourceMappingURL=app.css.map */
