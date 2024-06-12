@@ -36,7 +36,7 @@ jobs:
             - name: Install dependencies
               uses: php-actions/composer@v6
               with:
-                  php_version: 8.1
+                  php_version: 8.3
 
             - name: Analyze PHP code
               run: composer phpstan
