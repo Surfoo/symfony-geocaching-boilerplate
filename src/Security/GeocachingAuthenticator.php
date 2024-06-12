@@ -4,10 +4,13 @@ namespace App\Security;
 
 use App\Dao\UserDao;
 use App\Security\User;
+use Geocaching\Enum\MembershipType;
 use Geocaching\Utils;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\Provider\GeocachingClient;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
+use League\OAuth2\Client\Token\AccessToken;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -26,6 +29,7 @@ class GeocachingAuthenticator extends OAuth2Authenticator
         private RouterInterface $router,
         private RequestStack $requestStack,
         private UserDao $userDao,
+        private readonly LoggerInterface $apiLogger,
     ) {
     }
 
@@ -37,34 +41,24 @@ class GeocachingAuthenticator extends OAuth2Authenticator
 
     public function authenticate(Request $request): Passport
     {
-        $session = $this->requestStack->getSession();
-
-        $this->getGeocachingClient()->getOAuth2Provider()->setPkceCode($session->get('oauth2_pkce_code'));
-
-        $client = $this->clientRegistry->getClient('geocaching_main');
+        $session     = $this->requestStack->getSession();
         $accessToken = $this->fetchAccessToken($this->getGeocachingClient(), [
-            'code' => $request->get('code')
+            'code'          => $request->get('code'),
+            'code_verifier' => $session->get('codeVerifier'),
         ]);
 
-        $geocachingResourceOwner = $client->fetchUserFromToken($accessToken);
-
-        $user = new User();
-        $user->setUserId(Utils::referenceCodeToId($geocachingResourceOwner->getId()))
-             ->setReferenceCode($geocachingResourceOwner->getId())
-             ->setUsername($geocachingResourceOwner->getUsername())
-             ->setAvatarUrl($geocachingResourceOwner->getAvatarUrl())
-             ->setMembershipLevelId($geocachingResourceOwner->getMembershipLevelId())
-            ;
-
-        $this->userDao->upsertUser($user);
-
-        return new SelfValidatingPassport(
-            new UserBadge($geocachingResourceOwner->getUsername())
-        );
+        return new SelfValidatingPassport(new UserBadge($accessToken->getToken(), fn() => $this->getUser($accessToken)));
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): ?Response
     {
+        $this->apiLogger->info('onAuthenticationSuccess', [
+            'referenceCode'     => $token->getUser()->getReferenceCode(),
+            'userId'            => $token->getUser()->getUserId(),
+            'username'          => $token->getUser()->getUserIdentifier(),
+            'membershipLevelId' => $token->getUser()->getMembershipLevelId(),
+        ]);
+
         return null;
     }
 
@@ -73,10 +67,20 @@ class GeocachingAuthenticator extends OAuth2Authenticator
         $session = $this->requestStack->getSession();
         $session->getFlashBag()->add(
             'error',
-            'Erreur de connexion'
+            $exception->getMessageKey(),
         );
 
+        $this->apiLogger->error('onAuthenticationFailure', [
+            'key'     => $exception->getMessageKey(),
+            'message' => $exception->getMessageData(),
+        ]);
+
         return new RedirectResponse($this->router->generate('app_homepage'));
+    }
+
+    public function start(Request $request, AuthenticationException $authException = null): Response
+    {
+        return new RedirectResponse($this->router->generate('app_signin'));
     }
 
     private function getGeocachingClient(): GeocachingClient
@@ -84,14 +88,33 @@ class GeocachingAuthenticator extends OAuth2Authenticator
         return $this->clientRegistry->getClient('geocaching_main');
     }
 
-//    public function start(Request $request, AuthenticationException $authException = null): Response
-//    {
-//        /*
-//         * If you would like this class to control what happens when an anonymous user accesses a
-//         * protected page (e.g. redirect to /login), uncomment this method and make this class
-//         * implement Symfony\Component\Security\Http\EntryPoint\AuthenticationEntrypointInterface.
-//         *
-//         * For more details, see https://symfony.com/doc/current/security/experimental_authenticators.html#configuring-the-authentication-entry-point
-//         */
-//    }
+    private function getUser(AccessToken $credentials): User
+    {
+        $this->clientRegistry->getClient('geocaching_main')->getOAuth2Provider()->setResourceOwnerFields(
+            [...$this->clientRegistry->getClient('geocaching_main')->getOAuth2Provider()->getResourceOwnerFields(), ...['avatarUrl']]
+        );
+
+        $geocachingResourceOwner = $this->clientRegistry->getClient('geocaching_main')->fetchUserFromToken($credentials);
+
+        $user = new User();
+        $user->setUserId(Utils::referenceCodeToId($geocachingResourceOwner->getId()))
+            ->setReferenceCode($geocachingResourceOwner->getId())
+            ->setJoinedDateUtc(new \DateTime($geocachingResourceOwner->getJoinedDate()))
+            ->setUsername($geocachingResourceOwner->getUsername())
+            ->setCredentials($credentials)
+            ->setAvatarUrl($geocachingResourceOwner->getAvatarUrl())
+            ->setMembershipLevelId($geocachingResourceOwner->getMembershipLevelId())
+            ;
+
+        switch ($user->getMembershipLevelId()) {
+            case MembershipType::PREMIUM->id():
+                $user->setRoles(['ROLE_PREMIUM']);
+                break;
+            case MembershipType::BASIC->id():
+                $user->setRoles(['ROLE_BASIC']);
+                break;
+        }
+
+        return $user;
+    }
 }
