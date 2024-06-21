@@ -21,3 +21,9 @@ And then, open:
 ```
 http://localhost:8000
 ```
+
+## SCSS builder
+
+```
+bin/console sass:build --watch
+```

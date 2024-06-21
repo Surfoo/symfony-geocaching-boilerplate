@@ -14,7 +14,7 @@ class User implements UserInterface
     private ?string $avatarUrl;
     private string $membershipLevelId;
     private \DateTimeInterface $joinedDateUtc;
-    // private AccessToken $credentials;
+    private AccessToken $credentials;
 
     private array $roles = [];
 
@@ -95,22 +95,22 @@ class User implements UserInterface
         return $this;
     }
 
-    // public function getCredentials(): ?AccessToken
-    // {
-    //     return $this->credentials;
-    // }
+    public function getCredentials(): ?AccessToken
+    {
+        return $this->credentials;
+    }
 
-    // public function setCredentials(string $accessToken, string $refreshToken, int $expires): self
-    // {
-    //     $this->credentials = new AccessToken([
-    //         'access_token'      => $accessToken,
-    //         'refresh_token'     => $refreshToken,
-    //         'expires'           => $expires,
-    //         'resource_owner_id' => $this->getUserId(),
-    //     ]);
+    public function setCredentials(AccessToken $accessToken): self
+    {
+        $this->credentials = new AccessToken([
+            'access_token'      => $accessToken->getToken(),
+            'refresh_token'     => $accessToken->getRefreshToken(),
+            'expires'           => $accessToken->getExpires(),
+            'resource_owner_id' => $this->getUserId(),
+        ]);
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     public function isPremium(): bool
     {

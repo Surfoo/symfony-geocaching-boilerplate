@@ -40,4 +40,16 @@
     array (
     ),
   ),
+  'bootstrap-icons/font/bootstrap-icons.min.css' => 
+  array (
+    'version' => '1.11.3',
+    'dependencies' => 
+    array (
+    ),
+    'extraFiles' => 
+    array (
+      0 => '/font/fonts/bootstrap-icons.woff2',
+      1 => '/font/fonts/bootstrap-icons.woff',
+    ),
+  ),
 );

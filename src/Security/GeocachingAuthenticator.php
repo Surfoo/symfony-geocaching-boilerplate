@@ -23,6 +23,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
 class GeocachingAuthenticator extends OAuth2Authenticator
+
 {
     public function __construct(
         private ClientRegistry $clientRegistry,
@@ -42,12 +43,19 @@ class GeocachingAuthenticator extends OAuth2Authenticator
     public function authenticate(Request $request): Passport
     {
         $session     = $this->requestStack->getSession();
-        $accessToken = $this->fetchAccessToken($this->getGeocachingClient(), [
-            'code'          => $request->get('code'),
-            'code_verifier' => $session->get('codeVerifier'),
+
+        $this->clientRegistry->getClient('geocaching_main')->getOAuth2Provider()->setPkceCode($session->get('oauth2_pkce_code'));
+
+
+        $credentials = $this->fetchAccessToken($this->clientRegistry->getClient('geocaching_main'), [
+            'code' => $request->get('code')
         ]);
 
-        return new SelfValidatingPassport(new UserBadge($accessToken->getToken(), fn() => $this->getUser($accessToken)));
+        $user = $this->getUser($credentials);
+
+        $this->userDao->upsertUser($user);
+
+        return new SelfValidatingPassport(new UserBadge($credentials->getToken(), fn() => $this->getUser($credentials)));
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): ?Response
@@ -78,15 +86,10 @@ class GeocachingAuthenticator extends OAuth2Authenticator
         return new RedirectResponse($this->router->generate('app_homepage'));
     }
 
-    public function start(Request $request, AuthenticationException $authException = null): Response
-    {
-        return new RedirectResponse($this->router->generate('app_signin'));
-    }
-
-    private function getGeocachingClient(): GeocachingClient
-    {
-        return $this->clientRegistry->getClient('geocaching_main');
-    }
+    // public function start(Request $request, AuthenticationException $authException = null): Response
+    // {
+    //     return new RedirectResponse($this->router->generate('app_signin'));
+    // }
 
     private function getUser(AccessToken $credentials): User
     {

@@ -66,14 +66,14 @@ class UserProvider implements UserProviderInterface
 
         // Le type de compte a été récupéré depuis la base de données,
         // le role correspondant est set pour l'utilisateur connecté sur le site.
-        // switch ($user->getMembershipLevelId()) {
-        //     case MembershipType::getId('Premium'):
-        //         $user->setRoles(['ROLE_PREMIUM']);
-        //         break;
-        //     case MembershipType::getId('Basic'):
-        //         $user->setRoles(['ROLE_BASIC']);
-        //         break;
-        // }
+        switch ($user->getMembershipLevelId()) {
+            case MembershipType::PREMIUM->id():
+                $user->setRoles(['ROLE_PREMIUM']);
+                break;
+            case MembershipType::BASIC->id():
+                $user->setRoles(['ROLE_BASIC']);
+                break;
+        }
 
         // // Si le token de l'utilisateur n'a pas expiré, rien n'est fait
         // if (!$user->getCredentials()->hasExpired()) {
@@ -82,7 +82,7 @@ class UserProvider implements UserProviderInterface
 
         // Si on arrive là, c'est que le token a expiré
         // Utilisation de token de l'utilisateur pour l'API et refresh du token
-        //$this->api->setUser($user)->refreshToken();
+        // $this->api->setUser($user)->refreshToken();
 
         // Renvoie de l'objet User attendu, que le refresh ai fonctionné ou pas.
         return $user;
