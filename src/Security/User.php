@@ -11,7 +11,7 @@ class User implements UserInterface
     private int $userId;
     private string $username;
     private string $referenceCode;
-    private ?string $avatarUrl;
+    private ?string $avatarUrl = null;
     private string $membershipLevelId;
     private \DateTimeInterface $joinedDateUtc;
     private AccessToken $credentials;
@@ -42,6 +42,7 @@ class User implements UserInterface
         return $this;
     }
 
+    #[\Override]
     public function getUserIdentifier(): string
     {
         return (string) $this->username;
@@ -120,6 +121,7 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
+    #[\Override]
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -159,6 +161,7 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
+    #[\Override]
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here

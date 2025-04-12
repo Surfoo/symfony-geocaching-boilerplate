@@ -23,23 +23,24 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
 class GeocachingAuthenticator extends OAuth2Authenticator
-
 {
     public function __construct(
-        private ClientRegistry $clientRegistry,
-        private RouterInterface $router,
-        private RequestStack $requestStack,
-        private UserDao $userDao,
+        private readonly ClientRegistry $clientRegistry,
+        private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack,
+        private readonly UserDao $userDao,
         private readonly LoggerInterface $apiLogger,
     ) {
     }
 
+    #[\Override]
     public function supports(Request $request): ?bool
     {
         // continue ONLY if the current ROUTE matches the check ROUTE
         return $request->attributes->get('_route') === 'app_callback';
     }
 
+    #[\Override]
     public function authenticate(Request $request): Passport
     {
         $session     = $this->requestStack->getSession();
@@ -58,6 +59,7 @@ class GeocachingAuthenticator extends OAuth2Authenticator
         return new SelfValidatingPassport(new UserBadge($credentials->getToken(), fn() => $this->getUser($credentials)));
     }
 
+    #[\Override]
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): ?Response
     {
         $this->apiLogger->info('onAuthenticationSuccess', [
@@ -70,6 +72,7 @@ class GeocachingAuthenticator extends OAuth2Authenticator
         return null;
     }
 
+    #[\Override]
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         $session = $this->requestStack->getSession();
