@@ -35,9 +35,6 @@
             ".php-cs-fixer.dist.php"
         ]
     },
-    "friendsofphp/proxy-manager-lts": {
-        "version": "v1.0.5"
-    },
     "guzzlehttp/guzzle": {
         "version": "7.4.1"
     },
@@ -58,9 +55,6 @@
         "files": [
             "config/packages/knpu_oauth2_client.yaml"
         ]
-    },
-    "laminas/laminas-code": {
-        "version": "4.5.1"
     },
     "league/oauth2-client": {
         "version": "2.6.1"
@@ -305,18 +299,6 @@
             "config/packages/monolog.yaml"
         ]
     },
-    "symfony/notifier": {
-        "version": "6.3",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "5.0",
-            "ref": "178877daf79d2dbd62129dd03612cb1a2cb407cc"
-        },
-        "files": [
-            "config/packages/notifier.yaml"
-        ]
-    },
     "symfony/password-hasher": {
         "version": "v6.0.3"
     },
@@ -354,9 +336,6 @@
         "version": "v6.0.3"
     },
     "symfony/property-info": {
-        "version": "v6.0.3"
-    },
-    "symfony/proxy-manager-bridge": {
         "version": "v6.0.3"
     },
     "symfony/routing": {
