@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class UserProvider implements UserProviderInterface
 {
     public function __construct(
-        private UserDao $userDao
+        private readonly UserDao $userDao
         )
     {
     }
@@ -57,7 +57,7 @@ class UserProvider implements UserProviderInterface
     public function refreshUser(UserInterface $user): UserInterface
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Invalid user class "%s".', get_class($user)));
+            throw new UnsupportedUserException(sprintf('Invalid user class "%s".', $user::class));
         }
 
         // Return a User object after making sure its data is "fresh".
@@ -66,14 +66,19 @@ class UserProvider implements UserProviderInterface
 
         // Le type de compte a été récupéré depuis la base de données,
         // le role correspondant est set pour l'utilisateur connecté sur le site.
-        switch ($user->getMembershipLevelId()) {
-            case MembershipType::PREMIUM->id():
-                $user->setRoles(['ROLE_PREMIUM']);
-                break;
-            case MembershipType::BASIC->id():
-                $user->setRoles(['ROLE_BASIC']);
-                break;
-        }
+        match ($user->getMembershipLevelId()) {
+            MembershipType::PREMIUM->id() => $user->setRoles(['ROLE_PREMIUM']),
+            MembershipType::BASIC->id() => $user->setRoles(['ROLE_BASIC']),
+            // // Si le token de l'utilisateur n'a pas expiré, rien n'est fait
+            // if (!$user->getCredentials()->hasExpired()) {
+            //     return $user;
+            // }
+            // Si on arrive là, c'est que le token a expiré
+            // Utilisation de token de l'utilisateur pour l'API et refresh du token
+            // $this->api->setUser($user)->refreshToken();
+            // Renvoie de l'objet User attendu, que le refresh ai fonctionné ou pas.
+            default => $user,
+        };
 
         // // Si le token de l'utilisateur n'a pas expiré, rien n'est fait
         // if (!$user->getCredentials()->hasExpired()) {

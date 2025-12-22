@@ -45,7 +45,7 @@ class UserDao extends Dao
             return null;
         }
 
-        return (new User())->setUserId($result->user_id)
+        return new User()->setUserId($result->user_id)
                            ->setUsername($result->username)
                            ->setAvatarUrl($result->avatar)
                            ->setMembershipLevelId($result->membership_level_id)
