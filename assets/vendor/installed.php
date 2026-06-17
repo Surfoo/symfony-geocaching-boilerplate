@@ -11,7 +11,7 @@
   ),
   'bootstrap' => 
   array (
-    'version' => '5.3.3',
+    'version' => '5.3.8',
     'dependencies' => 
     array (
       0 => '@popperjs/core',
@@ -32,7 +32,7 @@
   ),
   'bootstrap/dist/css/bootstrap.min.css' => 
   array (
-    'version' => '5.3.3',
+    'version' => '5.3.8',
     'dependencies' => 
     array (
     ),
@@ -42,7 +42,7 @@
   ),
   'bootstrap-icons/font/bootstrap-icons.min.css' => 
   array (
-    'version' => '1.11.3',
+    'version' => '1.13.1',
     'dependencies' => 
     array (
     ),
