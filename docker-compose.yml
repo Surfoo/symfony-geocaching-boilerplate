@@ -1,6 +1,6 @@
 services:
     mariadb:
-        image: mariadb:10.6
+        image: mariadb:11.8
         container_name: ${GEOCODE}_mariadb
         working_dir: /application
         volumes:
@@ -28,7 +28,7 @@ services:
         working_dir: /application
         volumes:
             - .:/application
-            - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/8.3/fpm/conf.d/99-overrides.ini
+            - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/8.5/fpm/conf.d/99-overrides.ini
 
     phpmyadmin:
         depends_on:
