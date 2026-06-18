@@ -1,0 +1,31 @@
+parameters:
+  geocode: '%env(GEOCODE)%'
+  title: 'Your app title'
+  locale: fr
+  authorizedUserIdAdmin:
+    - PR1QQQP
+
+twig:
+  globals:
+    geocode: "%geocode%"
+    title: "%title"
+
+services:
+
+    App\Dao\Dao:
+        arguments:
+            - PDO
+
+    App\Dao\UserDao:
+        arguments:
+            $pdo: '@PDO'
+            $parameterBag: '@parameter_bag'
+
+    PDO:
+        class: PDO
+        arguments:
+            - "%env(DATABASE_URL)%"
+            - "%env(DATABASE_USERNAME)%"
+            - "%env(DATABASE_PASSWORD)%"
+        calls:
+            - [setAttribute, [3, 2]] # PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION
